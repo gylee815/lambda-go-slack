@@ -4,16 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
-	"fmt"
+	// "fmt"
 )
 
 type SlackPayload struct {
 	Text string `json:"text"`
 	Username string `json:"username"`
-}
-
-func TestFunc() string {
-	return "okay"
 }
 
 func PostMessage(url string, payload SlackPayload) error {
@@ -41,7 +37,5 @@ func PostMessage(url string, payload SlackPayload) error {
 		return err
 	}
 	
-	fmt.Println(body)
-
 	return nil
 }
