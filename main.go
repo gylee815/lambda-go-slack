@@ -3,19 +3,21 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+
 	// "os"
-	slack "lambda/Slack"
-	iplist "lambda/Iplist"
 	"encoding/base64"
 	"encoding/json"
+	iplist "lambda/Iplist"
+	slack "lambda/Slack"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 type Body struct {
-	Hostname      string `json:"host_name"`
-	Nodename      string `json:"node_name"`
+	Hostname string `json:"host_name"`
+	Nodename string `json:"node_name"`
 }
 
 // type MyEvent struct {
@@ -48,16 +50,16 @@ func HandleLambdaEvent(ctx context.Context, request events.LambdaFunctionURLRequ
 	fmt.Printf("Body size = %d.\n", len(request.Body))
 
 	jsonHeader, _ := json.Marshal(request.Headers)
-	fmt.Printf("Headers: %s\n", string(jsonHeader)) 
+	fmt.Printf("Headers: %s\n", string(jsonHeader))
 
 	// fmt.Println("Headers:")
 	// for key, value := range request.Headers {
 	// 	fmt.Printf("    %s: %s\n", key, value)
 	// }
-	
+
 	rawDecodedBody, err := base64.StdEncoding.DecodeString(request.Body)
 	if err != nil {
-			panic(err)
+		panic(err)
 	}
 
 	data := rawDecodedBody
@@ -65,7 +67,6 @@ func HandleLambdaEvent(ctx context.Context, request events.LambdaFunctionURLRequ
 
 	json.Unmarshal([]byte(data), &bodyData)
 	fmt.Printf("Body: %s\n", rawDecodedBody)
-	
 
 	site_name := iplist.GetSite(request.RequestContext.HTTP.SourceIP)
 	fmt.Printf("SourceIP: %s, SiteName: %s\n", request.RequestContext.HTTP.SourceIP, site_name)
