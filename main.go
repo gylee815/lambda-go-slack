@@ -73,10 +73,10 @@ func HandleLambdaEvent(ctx context.Context, request events.LambdaFunctionURLRequ
 
 	payload := slack.SlackPayload{Text: fmt.Sprintf("POD [ %s ] on NODE [ %s ] is terminated!\n SourceIP: %s\n", bodyData.Hostname, bodyData.Nodename, request.RequestContext.HTTP.SourceIP), Username: string(site_name)}
 	url := os.Getenv("SLACK_ONPREM_K8S")
-	if rst := slack.PostMessage(url, payload); rst == nil {
-		fmt.Println("Send message to slcak webhook succeed\n")
+	if err := slack.PostMessage(url, payload); err != nil {
+		fmt.Printf("Error msg: %s\n", err)
 	} else {
-		fmt.Printf("Error msg: %s\n", rst)
+		fmt.Println("Send message to slcak webhook succeed\n")
 	}
 
 	return events.LambdaFunctionURLResponse{Body: request.Body, StatusCode: 200}, nil
