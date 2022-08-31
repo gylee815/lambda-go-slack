@@ -73,6 +73,22 @@ func HandleLambdaEvent(ctx context.Context, request events.LambdaFunctionURLRequ
 
 	payload := slack.SlackPayload{Text: fmt.Sprintf("POD [ %s ] on NODE [ %s ] is terminated!\n SourceIP: %s\n", bodyData.Hostname, bodyData.Nodename, request.RequestContext.HTTP.SourceIP), Username: string(site_name)}
 	url := os.Getenv("SLACK_ONPREM_K8S")
+
+	/* This will be active after slack url with encrypted with kms -> Terraform not ready yet */
+	// url := os.Getenv("kmsEncryptedHookUrl")
+	// lambdaFuncName := os.Getenv("AWS_LAMBDA_FUNCTION_NAME")
+	// kmsPayload := kmsDecrypt.KMSLambdaPayload{
+	// 	Data:               url,
+	// 	LambdaFunctionName: lambdaFuncName,
+	// }
+
+	// if rst, success := kmsDecrypt.DecryptData(kmsPayload); success {
+	// 	url = rst
+	// 	fmt.Printf("Slack url: %s\n", rst)
+	// } else {
+	// 	fmt.Printf("Error msg: %s\n", rst)
+	// }
+
 	if err := slack.PostMessage(url, payload); err != nil {
 		fmt.Printf("Error msg: %s\n", err)
 	} else {
