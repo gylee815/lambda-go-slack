@@ -1,3 +1,5 @@
+// BUILD : GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o HandleLambdaEvent main.go
+// ZIP : zip HandleLambdaEvent.zip HandleLambdaEvent iplist.json
 package main
 
 import (
@@ -8,8 +10,8 @@ import (
 	// "os"
 	"encoding/base64"
 	"encoding/json"
-	iplist "lambda/Iplist"
-	slack "lambda/Slack"
+	iplist "lambda/modules/iplist"
+	slack "lambda/modules/slack"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -74,7 +76,7 @@ func HandleLambdaEvent(ctx context.Context, request events.LambdaFunctionURLRequ
 	payload := slack.SlackPayload{Text: fmt.Sprintf("POD [ %s ] on NODE [ %s ] is terminated!\n SourceIP: %s\n", bodyData.Hostname, bodyData.Nodename, request.RequestContext.HTTP.SourceIP), Username: string(site_name)}
 	url := os.Getenv("SLACK_ONPREM_K8S")
 
-	/* This will be active after slack url with encrypted with kms -> Terraform not ready yet */
+	// /* This will be active after slack url with encrypted with kms -> Terraform not ready yet */
 	// url := os.Getenv("kmsEncryptedHookUrl")
 	// lambdaFuncName := os.Getenv("AWS_LAMBDA_FUNCTION_NAME")
 	// kmsPayload := kmsDecrypt.KMSLambdaPayload{
