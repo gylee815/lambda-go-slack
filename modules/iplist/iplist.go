@@ -27,11 +27,11 @@ func GetSite(ip string) string {
 	var tmp map[string]interface{}
 	json.Unmarshal([]byte(ip_list), &tmp)
 
-	tmpValue, ok := tmp[ip].(string)
+	siteName, ok := tmp[ip].(string)
 	if !ok {
-		fmt.Printf("dateValue is not a string\n")
+		fmt.Printf("siteName is not a string\n")
 		return "fail"
 	}
 
-	return tmpValue
+	return siteName
 }
